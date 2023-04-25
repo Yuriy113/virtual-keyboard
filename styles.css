@@ -33,6 +33,8 @@ div {
 }
 
 .keyboard {
+  display: flex;
+  gap: 6px;
   margin: 10px auto;
   width: 700px;
   height: 300px;
@@ -43,14 +45,24 @@ div {
 .keyboard__key {
   min-width: 40px;
   height: 40px;
-
+  border: none;
+  box-shadow: 2px 2px 2px rgb(0, 0, 0);
   border-radius: 5px;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  font-weight: 600;
+  outline: none;
 }
 
 .keyboard__key:hover {
   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.keyboard__key:active {
+  background-color: rgb(111, 255, 0);
+  box-shadow: none;
+  color: black;
 }
 
 .pressed {
