@@ -28,10 +28,10 @@ let currentLang = false;
 let currentState = false;
 
 const keys = [
-  { en: { normal: '`', shifted: '~' }, ru: { normal: 'ё', shifted: 'Ё' } },
-  { en: { normal: '1', shifted: '!' }, ru: { normal: '1', shifted: '!' } },
-  { en: { normal: '2', shifted: '@' }, ru: { normal: '2', shifted: '"' } },
-  { en: { normal: '4', shifted: '$' }, ru: { normal: '4', shifted: ';' } },
+  { en: { normal: '`', shifted: '~' }, ru: { normal: 'ё', shifted: 'Ё' }, code: 'Backquote' },
+  { en: { normal: '1', shifted: '!' }, ru: { normal: '1', shifted: '!' }, code: 'Digit1' },
+  { en: { normal: '2', shifted: '@' }, ru: { normal: '2', shifted: '"' }, code: 'Digit2' },
+  { en: { normal: '3', shifted: '#' }, ru: { normal: '3', shifted: '№' }, code: 'Digit3' },
 ];
 
 const createKeyboardKeys = (keys, lang, shift) => {
@@ -39,21 +39,21 @@ const createKeyboardKeys = (keys, lang, shift) => {
     const key = document.createElement('button');
     key.classList.add('keyboard__key');
     key.innerText = value[lang][shift];
+
+    key.addEventListener('click', () => {
+      textarea.value += key.innerText;
+    });
     keyboard.appendChild(key);
   }
 };
 
-// const updateKeyboardKeys = (keys, lang, shift) => {
-//   let buttons = document.querySelectorAll('.keyboard__key');
-//   console.log(buttons);
-//   for (let button of buttons) {
-//     button.innerText = keys[lang][shift];
-//   }
-// };
-
 createKeyboardKeys(keys, languages[0], states[0]);
 
 document.addEventListener('keydown', (e) => {
+  if (e.repeat) return;
+  e.preventDefault();
+  console.log(e.code);
+
   let lang = languages[+currentLang];
   let shift = states[+e.shiftKey];
   if (e.altKey && e.ctrlKey) {
@@ -63,6 +63,10 @@ document.addEventListener('keydown', (e) => {
   let buttons = document.querySelectorAll('.keyboard__key');
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].innerText = keys[i][lang][shift];
+    if (keys[i].code === e.code) {
+      buttons[i].classList.add('pressed');
+      textarea.value += buttons[i].innerHTML;
+    }
   }
   pageLanguage.innerText = lang;
 });
@@ -77,6 +81,9 @@ document.addEventListener('keyup', (e) => {
   let buttons = document.querySelectorAll('.keyboard__key');
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].innerText = keys[i][lang][shift];
+    if (buttons[i].classList.contains('pressed')) {
+      buttons[i].classList.remove('pressed');
+    }
   }
   pageLanguage.innerText = lang;
 });
