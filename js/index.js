@@ -11,6 +11,8 @@ container.appendChild(title);
 
 const textarea = document.createElement('textarea');
 textarea.classList.add('text-wrapper');
+// textarea.setAttribute('autofocus', 'true');
+
 container.appendChild(textarea);
 
 const keyboard = document.createElement('div');
@@ -47,7 +49,18 @@ const keys = [
     code: 'Backspace',
     service: true,
   },
+  { en: { normal: 'Tab', shifted: 'Tab' }, ru: { normal: 'Tab', shifted: 'Tab' }, code: 'Tab' },
+  { en: { normal: 'q', shifted: 'Q' }, ru: { normal: 'й', shifted: 'Й' }, code: 'KeyQ' },
+  { en: { normal: 'w', shifted: 'W' }, ru: { normal: 'ц', shifted: 'Ц' }, code: 'KeyW' },
+  { en: { normal: 'e', shifted: 'E' }, ru: { normal: 'у', shifted: 'У' }, code: 'KeyE' },
+  { en: { normal: 'r', shifted: 'R' }, ru: { normal: 'к', shifted: 'К' }, code: 'KeyR' },
+  { en: { normal: 't', shifted: 'T' }, ru: { normal: 'е', shifted: 'Е' }, code: 'KeyT' },
+  { en: { normal: 'y', shifted: 'Y' }, ru: { normal: 'н', shifted: 'Н' }, code: 'KeyY' },
+  { en: { normal: 'u', shifted: 'U' }, ru: { normal: 'г', shifted: 'Г' }, code: 'KeyU' },
+  { en: { normal: 'i', shifted: 'I' }, ru: { normal: 'ш', shifted: 'Ш' }, code: 'KeyI' },
 ];
+
+// let isArrows =
 
 const createKeyboardKeys = (keys, lang, shift) => {
   for (let value of keys) {
@@ -60,19 +73,30 @@ const createKeyboardKeys = (keys, lang, shift) => {
         let substr = textarea.value;
         let newstr = substr.slice(0, substr.length - 1);
         textarea.value = newstr;
+        textarea.focus();
         return;
       }
+
       textarea.value += key.innerText;
+      textarea.focus();
     });
     keyboard.appendChild(key);
   }
 };
 
 createKeyboardKeys(keys, languages[0], states[0]);
+document.addEventListener('click', () => textarea.focus());
+textarea.focus();
 
 document.addEventListener('keydown', (e) => {
+  let isArrow =
+    e.code === 'ArrowUp' ||
+    e.code === 'ArrowDown' ||
+    e.code === 'ArrowLeft' ||
+    e.code === 'ArrowRight';
+
   if (e.repeat) return;
-  e.preventDefault();
+  if (!isArrow) e.preventDefault();
 
   let lang = languages[+currentLang];
   let shift = states[+e.shiftKey];
@@ -90,6 +114,7 @@ document.addEventListener('keydown', (e) => {
         textarea.value = newstr;
         return;
       }
+
       buttons[i].classList.add('pressed');
       textarea.value += buttons[i].innerHTML;
     }
