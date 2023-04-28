@@ -13,7 +13,6 @@ container.appendChild(title);
 
 const textarea = document.createElement('textarea');
 textarea.classList.add('text-wrapper');
-// textarea.setAttribute('autofocus', 'true');
 
 container.appendChild(textarea);
 
@@ -71,7 +70,7 @@ const createKeyboardKeys = (keys, lang, shift) => {
     button.classList.add(`${key.code}`);
     button.innerText = key[lang][shift];
 
-    button.addEventListener('click', () => {
+    button.addEventListener('mousedown', () => {
       if (key.code === 'Backspace') {
         removePrev();
         return;
@@ -84,16 +83,55 @@ const createKeyboardKeys = (keys, lang, shift) => {
         textarea.setRangeText(`    `, textarea.selectionStart, textarea.selectionEnd, 'end');
         return;
       }
+
       if (key.code === 'ShiftLeft' || key.code === 'ShiftRight') {
-        // TODO: implement virtual shift behavior
+        currentState = !currentState;
+        let shift = states[+currentState];
+        console.log(shift);
+        const tempButtons = document.querySelectorAll('.keyboard__key');
+        for (let i = 0; i < tempButtons.length; i++) {
+          tempButtons[i].innerText = keys[i][lang][shift];
+        }
       }
 
-      textarea.value += button.innerText;
+      if (!serviceKeys.includes(key.code)) {
+        textarea.value += button.innerText;
+      }
+
       textarea.focus();
     });
+
+    button.addEventListener('mouseup', () => {
+      if (key.code === 'ShiftLeft' || key.code === 'ShiftRight') {
+        currentState = false;
+        let shift = states[+currentState];
+        console.log(shift);
+        const tempButtons = document.querySelectorAll('.keyboard__key');
+        for (let i = 0; i < tempButtons.length; i++) {
+          tempButtons[i].innerText = keys[i][lang][shift];
+        }
+      }
+    });
+
     keyboard.appendChild(button);
   }
 };
+
+const serviceKeys = [
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'Enter',
+  'ShiftLeft',
+  'ShiftRight',
+  'ControlLeft',
+  'ControlRight',
+  'AltLeft',
+  'AltRight',
+  'Space',
+  'CapsLock',
+];
 
 createKeyboardKeys(keys, languages[0], states[0]);
 
@@ -108,19 +146,8 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
-  const isServiceKey =
-    e.code === 'ArrowUp' ||
-    e.code === 'ArrowDown' ||
-    e.code === 'ArrowLeft' ||
-    e.code === 'ArrowRight' ||
-    e.code === 'Enter' ||
-    e.code === 'ShiftLeft' ||
-    e.code === 'ShiftRight' ||
-    e.code === 'ControlLeft' ||
-    e.code === 'ControlRight' ||
-    e.code === 'AltLeft' ||
-    e.code === 'AltRight' ||
-    e.code === 'Space';
+  const isServiceKey = serviceKeys.includes(e.code);
+  console.log(isServiceKey);
 
   let lang = languages[+currentLang];
   let shift = states[+e.shiftKey];
@@ -137,12 +164,6 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         textarea.focus();
       } else {
-        for (let key of keys) {
-          if (e.code === key.code) {
-            console.log(e.target);
-          }
-        }
-        console.log(e);
         return;
       }
 
