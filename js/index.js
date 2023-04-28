@@ -30,6 +30,7 @@ let currentLang = false;
 let currentState = false;
 
 const keys = [
+  // row1
   { en: { normal: '`', shifted: '~' }, ru: { normal: 'ё', shifted: 'Ё' }, code: 'Backquote' },
   { en: { normal: '1', shifted: '!' }, ru: { normal: '1', shifted: '!' }, code: 'Digit1' },
   { en: { normal: '2', shifted: '@' }, ru: { normal: '2', shifted: '"' }, code: 'Digit2' },
@@ -47,8 +48,8 @@ const keys = [
     en: { normal: 'Backspace', shifted: 'Backspace' },
     ru: { normal: 'Backspace', shifted: 'Backspace' },
     code: 'Backspace',
-    service: true,
   },
+  // row 2
   { en: { normal: 'Tab', shifted: 'Tab' }, ru: { normal: 'Tab', shifted: 'Tab' }, code: 'Tab' },
   { en: { normal: 'q', shifted: 'Q' }, ru: { normal: 'й', shifted: 'Й' }, code: 'KeyQ' },
   { en: { normal: 'w', shifted: 'W' }, ru: { normal: 'ц', shifted: 'Ц' }, code: 'KeyW' },
@@ -58,9 +59,41 @@ const keys = [
   { en: { normal: 'y', shifted: 'Y' }, ru: { normal: 'н', shifted: 'Н' }, code: 'KeyY' },
   { en: { normal: 'u', shifted: 'U' }, ru: { normal: 'г', shifted: 'Г' }, code: 'KeyU' },
   { en: { normal: 'i', shifted: 'I' }, ru: { normal: 'ш', shifted: 'Ш' }, code: 'KeyI' },
+  { en: { normal: 'o', shifted: 'O' }, ru: { normal: 'щ', shifted: 'Щ' }, code: 'KeyO' },
+  { en: { normal: 'p', shifted: 'P' }, ru: { normal: 'з', shifted: 'З' }, code: 'KeyP' },
+  { en: { normal: '[', shifted: '{' }, ru: { normal: 'х', shifted: 'Х' }, code: 'BracketLeft' },
+  { en: { normal: ']', shifted: '}' }, ru: { normal: 'ъ', shifted: 'Ъ' }, code: 'BracketRight' },
+  { en: { normal: '\\', shifted: '|' }, ru: { normal: '\\', shifted: '/' }, code: 'Backslash' },
+  { en: { normal: 'del', shifted: 'del' }, ru: { normal: 'del', shifted: 'del' }, code: 'Delete' },
 ];
 
-// let isArrows =
+const removePrev = () => {
+  let caret = textarea.selectionStart;
+  let substr = textarea.value;
+  let arr = substr.split('');
+
+  if (arr[caret - 1]) {
+    arr.splice(caret - 1, 1);
+    let newstr = arr.join('');
+
+    textarea.value = newstr;
+    textarea.selectionStart = textarea.selectionEnd = caret - 1;
+  }
+};
+
+const removeNext = () => {
+  let caret = textarea.selectionStart;
+  let substr = textarea.value;
+  let arr = substr.split('');
+
+  if (arr[caret]) {
+    arr.splice(caret, 1);
+    let newstr = arr.join('');
+
+    textarea.value = newstr;
+    textarea.selectionStart = textarea.selectionEnd = caret;
+  }
+};
 
 const createKeyboardKeys = (keys, lang, shift) => {
   for (let value of keys) {
@@ -70,10 +103,12 @@ const createKeyboardKeys = (keys, lang, shift) => {
 
     key.addEventListener('click', () => {
       if (key.innerHTML === 'Backspace') {
-        let substr = textarea.value;
-        let newstr = substr.slice(0, substr.length - 1);
-        textarea.value = newstr;
-        textarea.focus();
+        removePrev();
+        return;
+      }
+
+      if (key.innerHTML === 'del') {
+        removeNext();
         return;
       }
 
@@ -109,9 +144,11 @@ document.addEventListener('keydown', (e) => {
     buttons[i].innerText = keys[i][lang][shift];
     if (keys[i].code === e.code) {
       if (e.code === 'Backspace') {
-        let substr = textarea.value;
-        let newstr = substr.slice(0, substr.length - 1);
-        textarea.value = newstr;
+        removePrev();
+        return;
+      }
+      if (e.code === 'Delete') {
+        removeNext();
         return;
       }
 
