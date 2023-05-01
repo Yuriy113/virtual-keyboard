@@ -92,10 +92,15 @@ const keys = [
   },
   { en: { normal: 'Alt', shifted: 'Alt' }, ru: { normal: 'Alt', shifted: 'Alt' }, code: 'AltLeft' },
   {
-    en: { normal: 'Spacebar', shifted: 'Spacebar' },
-    ru: { normal: 'Spacebar', shifted: 'Spacebar' },
+    en: { normal: ' ', shifted: ' ' },
+    ru: { normal: ' ', shifted: ' ' },
     code: 'Space',
   },
+  // {
+  //   en: { normal: 'Spacebar', shifted: 'Spacebar' },
+  //   ru: { normal: 'Spacebar', shifted: 'Spacebar' },
+  //   code: 'Space',
+  // },
   {
     en: { normal: 'Alt', shifted: 'Alt' },
     ru: { normal: 'Alt', shifted: 'Alt' },

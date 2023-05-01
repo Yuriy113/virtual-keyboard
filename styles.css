@@ -63,9 +63,9 @@ div {
   transition: all 0.2s ease;
 }
 
-.keyboard__key:hover {
+/* .keyboard__key:hover {
   background-color: rgba(255, 255, 255, 0.5);
-}
+} */
 
 .keyboard__key:active {
   background-color: rgb(111, 255, 0);
@@ -106,6 +106,10 @@ div {
   font-size: 18px;
   font-weight: 600;
 }
+
+/* .capsed {
+  background-color: #fff;
+} */
 
 /* Special styles */
 
